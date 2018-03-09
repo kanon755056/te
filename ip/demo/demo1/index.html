@@ -1,0 +1,162 @@
+﻿<!doctype html>
+<html>
+
+<head>
+<title>Genesys WebRTC Gateway Demo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link type="text/css" rel="stylesheet" media="all" href="../css/kube.min.css" />
+</head>
+
+<body>
+
+<div style="margin:10px;">
+
+<div>
+  <img alt="Genesys" id="ghcc-header-logo" src="../images/logo-genesys-refresh.jpg" height="20px">&nbsp;<h5>WebRTC Demo Portal</h5>
+</div>
+
+<hr/>
+
+<!--
+<div>
+    <h3>There are two demos to show:</h3>
+    <ul>
+        <li><a href="#AudioVideo">Audio+Video call</a></li>
+        <li><a href="#AudioOnly">Audio-only call</a></li>
+    </ul>
+</div>
+-->
+
+<div>
+    <h5>This demo shows a simple browser to browser <mark>audio-only</mark> or <mark>audio-video</mark> chat scenario step by step.</h5>
+
+<ol>
+    <li>
+    Click the <a href="audio_video.html" target="_blank">audio_video.html</a>
+    link to open the web app in a new page.
+    </li>
+
+    <li>
+    Click the <a href="audio_video.html" target="_blank">audio_video.html</a>
+    link to open the same web app in another page.
+    </li>
+
+    <li>
+    Treat one web app as <mark>Caller</mark> and the other as <mark>Callee</mark>, follow the steps on the pages to make a call.
+    </li>
+
+    <li>
+    A typical call where the Caller is <mark>anonymous</mark> would follow this use case:
+    <table class="table-bordered">
+        <thead>
+        <tr>
+            <th>Caller</th>
+            <th>Callee</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>STEP1</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>STEP2</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>STEP3</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>STEP4 (select Anon)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>STEP1</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>STEP2</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>STEP3</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>STEP4 (select a DN)</td>
+        </tr>
+        <tr>
+            <td>STEP5</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td colspan="2">STEP6 (either side can terminate)</td>
+        </tr>
+        </tbody>
+    </table>
+    </li>
+
+    <li>
+    A typical call where the Caller is <mark>registered</mark> would follow this use case: (the only difference is STEP4 on caller side)
+    <table class="table-bordered">
+        <thead>
+        <tr>
+            <th>Caller</th>
+            <th>Callee</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>STEP1</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>STEP2</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>STEP3</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><font color="green">STEP4 (select a DN)</font></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>STEP1</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>STEP2</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>STEP3</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>STEP4 (select a DN)</td>
+        </tr>
+        <tr>
+            <td>STEP5</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td colspan="2">STEP6 (either side can terminate)</td>
+        </tr>
+        </tbody>
+    </table>
+    </li>
+</ol>
+
+</div>
+
+<hr/>
+
+</div>
+
+</body>
+</html>

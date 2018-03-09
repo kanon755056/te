@@ -1,0 +1,284 @@
+﻿<!doctype html>
+<html>
+
+<head>
+<title>Genesys WebRTC Gateway Demo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link type="text/css" rel="stylesheet" media="all" href="../css/kube.min.css" />
+
+<script type="text/javascript" src="../js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../src/jsapi/classes/grtc.js"></script>
+<script type="text/javascript" src="demo1.js"></script>
+
+</head>
+
+<body>
+
+<div style="margin:10px;">
+
+
+<hr>
+
+<div id="isWebrtcSupported-section">
+    <h5>Check if WebRTC is <mark>supported</mark> by your browser. This will call static method <code>Grtc.isWebrtcSupported()</code></h5>
+    <input type="button" style="text-align:left;width:250px;" value="STEP1: Check Webrtc Support" onClick="check();">
+</div>
+
+<!-- begin config-section -->
+<div id="config-section" style="display:none;">
+    <h5>WebRTC is supported - now need to set some basic parameters. These parameters are used to create an instance of <code>Grtc.Client</code>.
+        <br/>Ask your RSMP and SIP-Server administrator for the values of these parameters.</h5>
+    <!--ul>
+        <li>the first parameter is where the <mark>WebRTC Gateway</mark> is running and it is required</li>
+        <li>the second parameter is where the <mark>STUN Server</mark> is running and it is required unless a TURN server is specified</li>
+        <li>the next three parameters are for <mark>TURN Server</mark> setting and are optional if a valid STUN server is specified</li>
+        <li>the next two optional parameters are needed only if you need to be <mark>authenticated</mark> when signing in to SIP server</li>
+        <li>the next parameter selects the <mark>SRTP key</mark> exchange method in Chrome, DTLS-SRTP or SDES-SRTP</li>
+        <li>the next parameter determines whether to enable <mark>IPv6</mark> for PeerCoonection in Chrome (M35 onwards)</li>
+        <li>the next parameter is for <mark>no-answer</mark> timeout</li>
+        <li>the last one is for <mark>ICE gathering</mark> timeout</li>
+    </ul-->
+    <table>
+        <tr>
+            <td>Grtc.Client.webrtc_gateway </td>
+            <td><input id="webrtc_gateway" value="http://172.24.34.78:8086" size="60" /></td>
+            <td> HTTP URI of the WebRTC Gateway (required) </td>
+			
+        </tr>
+        <tr>
+            <td>Grtc.Client.stun_server</td>
+            <td><input id="stun_server" value="" size="60" /></td>
+            <td> URI of the STUN server (optional) </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.turn_server</td>
+            <td><input id="turn_server" value="" size="60" /></td>
+            <td> URI of the TURN server (optional) </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.turn_username</td>
+            <td><input id="turn_username" value="" size="60" /></td>
+            <td> Username for the TURN server (optional) </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.turn_password</td>
+            <td><input id="turn_password" value="" size="60" /></td>
+            <td> Password for the TURN server (optional) </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.sip_username</td>
+            <td><input id="sip_username" value="" size="60" /></td>
+            <td> Username for authenticating with SIP Server (optional) </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.sip_password</td>
+            <td><input id="sip_password" value="" size="60" /></td>
+            <td> Password for authenticating with SIP Server (optional) </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.dtls_srtp</td>
+            <td><input id="dtls_srtp" type="checkbox" checked /></td>
+            <td> SRTP key-exchange method used, DTLS-SRTP or SDES-SRTP (Chrome only) </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.enable_ipv6</td>
+            <td><input id="enable_ipv6" type="checkbox" /></td>
+            <td> IPv6 use in PeerConnection (Chrome only) </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.noanswer_timeout</td>
+            <td><input id="noanswer_timeout" value="60000" size="60" /></td>
+            <td> No-answer timeout value, in milliseconds </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.ice_timeout</td>
+            <td><input id="ice_timeout" value="3000" size="60" /></td>
+            <td> ICE gathering timeout value, in milliseconds </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.ice_optimization</td>
+            <td><input id="ice_optimization" type="checkbox" /></td>
+            <td> To enable or disable ICE optimization </td>
+        </tr>
+        <tr>
+            <td>Grtc.Client.polling_timeout</td>
+            <td><input id="polling_timeout" value="30000" size="60" /></td>
+            <td> Long polling timeout value, in milliseconds </td>
+        </tr>
+    </table>
+
+    <input type="button" style="text-align:left;width:250px;" value="STEP2: Create Grtc.Client" onClick="testGrtcClientConstructor(true, true);">
+    <select id="mediaTypes">
+        <option value="AV" selected>Audio + Video</option>
+        <option value="AO">Audio Only</option>
+        <option value="VO">Video Only</option>
+    </select>
+    <select id="autoAnswer">
+        <option value="false" selected>Call Answer - Manual</option>
+        <option value="true">Call Answer - Auto (Talk Event)</option>
+    </select>
+</div>
+<!-- end config-section -->
+
+<!-- begin main -->
+<div id="main" style="display:none;">
+
+    <div>
+      <input type="button" style="text-align:left;width:250px;" value="STEP3: Enable Media Sources" onClick="setMediaSources();">     
+      <select id="mediaSources">
+        <option value="AV" selected>Audio + Video</option>
+        <option value="AO">Audio Only</option>
+        <option value="VO">Video Only</option>
+        <option value="SS">Screen Sharing</option>
+      </select>
+      (Select and enable media source(s) - could change, after call is established, and update call)
+    </div>
+
+    <!-- div>
+    <input type="button" style="text-align:left;width:250px;" value="STEP4: Register Anonymous; or" onClick="testConnect();">
+    (Sign-in to the WebRTC Gateway anonymously)
+    </div -->
+
+    <div>
+    <input type="button" style="text-align:left;width:250px;" value="STEP4: Sign in with Gateway" onClick="testRegister();">
+    <select id="registerInput">
+        <option>Anon</option>
+        <option>14001</option> <option>14002</option>
+        <option>14008</option> <option>10001</option>
+        <option>1024</option> <option>1025</option>
+        <option>1026</option> <option>1027</option>
+        <option>1028</option> <option>1029</option>
+    </select>
+    (Sign in to WebRTC Gateway anonymously, or using a DN registered on SIP-Server)
+    <!-- Ask your RSMP and SIP server administrator which DNs you can use, and update the DNs in the HTML source accordingly. -->
+    </div>
+
+    <div>
+      <input type="button" style="text-align:left;width:250px;" value="STEP5: Call DN; or Update Call" onClick="testSelectAndCall();">
+      <select id="remoteDNInput">
+          <option></option> <option>self</option>
+          <option>14001</option> <option>14002</option>
+        <option>14008</option> <option>10001</option><option>1020</option> <option>1021</option>
+          <option>3020</option>
+      </select>
+      <select id="mediaReceived">
+          <option value="AV" selected>Audio + Video</option>
+          <option value="AO">Audio Only</option>
+          <option value="VO">Video Only</option>
+      </select>
+    (Select DN [or "self" for loopback], if call not established, and media type(s) to receive; then call/update)
+    <!-- In this example, 1020 and 1021 are DNs for two agents, and 3020 is a Routing Point.
+      Ask your RSMP and SIP server administrator which DNs you can use, and update the DNs in the HTML source accordingly.) -->
+    </div>
+
+    <!-- div>
+    <input type="button" style="text-align:left;width:250px;" value="STEP5a: Accept Call" onClick="" disabled="true">
+    (Callee will be prompted to accept a call with a dialogue)
+    </div -->
+
+    <div>
+    <input type="button" style="text-align:left;width:250px;" value="STEP6: Disconnect Call" onClick="testHangUp();">
+    (Disconnect the call with the remote DN)
+    </div>
+
+    <div>
+    <input type="button" style="text-align:left;width:250px;" value="STEP7: Sign out from Gateway" onClick="testDisconnect();">
+    (Sign out from the WebRTC Gateway - for either anonymous or registered session)
+    </div>
+
+    <div>
+    <input type="button" style="text-align:left;width:250px;" value="STEP8: Disable Media Sources" onClick="testDisableMediaSource();">
+    (Stop access to local audio/video)
+    </div>
+    
+    <div>
+    <input type="button" style="text-align:left;width:250px;" value="Accept Call" onClick="testAcceptCall();">
+    (Accept/answer an incoming call manually)
+    </div>
+ 
+    <div>
+    <input type="button" style="text-align:left;width:123px;" value="Mute Call" onClick="testUpdateCall(false, false);">
+    <input type="button" style="text-align:left;width:123px;" value="Unmute Call" onClick="testUpdateCall(true, true);">
+    (Mute local stream;  and unmute the stream)
+    </div>
+
+    <div>
+    <input type="button" style="text-align:left;width:123px;" value="Hold Call" onClick="testHoldCall();">
+    <input type="button" style="text-align:left;width:123px;" value="Resume Call" onClick="testResumeCall();">
+    (Put current call on hold;  and take the call off hold)
+    </div>
+
+    <div>
+    <input type="button" style="text-align:left;width:250px;" value="Send Mid-call Data" onClick="testSendData();">
+    <input id="PeerData" value="" size="60" />
+    (Send data in query string format to peer)
+    </div>
+    
+    <div>
+    <input type="button" style="text-align:left;width:250px;" value="Get Stats" onClick="testGetStats();">
+    (Get call statistics from WebRTC server, and log results to console from some analysis; all stats are logged if log level is 3)
+    </div>
+    
+    <div>
+    <input type="button" style="text-align:left;width:250px;" value="TOGGLE Remote View Size" onClick="toggleRemoteViewSize();">
+    (Double Remote View frame on each click, up to 3 times, and then go back to original size)
+    </div>
+	
+    <div>
+    <input type="button" style="text-align:left;width:250px;" value="START OVER" onClick="location.reload();">
+    (Reload the page to start over)
+    </div>
+
+    <br />
+    <hr />
+
+    <div>
+
+        <table>
+            <tr>
+                <td>
+                    Local View
+                </td>
+                <td>
+                    Remote View
+                </td>
+                <td valign=top>
+                    Dial Pad
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>
+                        <video width="320" height="240" id="localView" autoplay="autoplay" controls muted="true"></video>
+                    </div>
+                </td>
+
+                <td>
+                    <div>
+                        <video width="320" height="240" id="remoteView" autoplay="autoplay" controls></video>
+                    </div>
+                </td>
+                <td valign=top>
+                    <div id="dialingPad">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span id="localStatus"></span>
+                </td>
+                <td>
+                    <span id="remoteStatus"></span>
+                </td>
+                <td/>
+            </tr>
+        </table>
+
+    </div>
+
+</div>
+
+</div>
+
+</body>
+</html>
